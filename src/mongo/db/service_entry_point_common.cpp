@@ -531,8 +531,15 @@ public:
     // relevant to a specific command should be confined to its run() method.
     Future<void> run() {
         return makeReadyFutureWith([&] {
+                   auto begin = std::chrono::high_resolution_clock::now();
+                   LOGV2(9999990, "INITIATE COMMAND STARTS!");
                    _initiateCommand();
-                   return _commandExec();
+                   Future<void> result = _commandExec();
+                   auto end = std::chrono::high_resolution_clock::now();
+                   LOGV2(9999991, "INITIATE COMMAND FINISHES : executeCommand_time={time}",
+                         "INITIATE COMMAND FINISHES!",
+                         "time"_attr = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count());
+                   return result;
                })
             .onCompletion([this](Status status) {
                 // Ensure the lifetime of `_scopedMetrics` ends here.

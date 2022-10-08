@@ -37,6 +37,7 @@
 #include "mongo/util/fail_point.h"
 #include "mongo/util/future.h"
 #include "mongo/util/polymorphic_scoped.h"
+#include <chrono>
 
 namespace mongo {
 
