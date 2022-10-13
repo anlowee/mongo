@@ -1385,7 +1385,12 @@ DbResponse receivedCommands(OperationContext* opCtx,
                 }
             }
 
+            auto begin = std::chrono::high_resolution_clock::now();
             execCommandDatabase(opCtx, c, request, replyBuilder.get(), behaviors);
+            auto end = std::chrono::high_resolution_clock::now();
+            LOGV2(9999991, "EXECUTE COMMAND FINISHES : time={time}",
+                  "EXECUTE COMMAND FINISHES!",
+                  "time"_attr = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count());
         } catch (const DBException& ex) {
             BSONObjBuilder metadataBob;
             behaviors.appendReplyMetadataOnError(opCtx, &metadataBob);

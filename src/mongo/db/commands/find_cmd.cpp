@@ -56,6 +56,7 @@
 #include "mongo/db/transaction_participant.h"
 #include "mongo/logv2/log.h"
 #include "mongo/rpc/get_status_from_command_result.h"
+#include <chrono>
 
 namespace mongo {
 namespace {
@@ -308,6 +309,7 @@ public:
          *   --Generate response to send to the client.
          */
         void run(OperationContext* opCtx, rpc::ReplyBuilderInterface* result) {
+            auto begin = std::chrono::high_resolution_clock::now();
             CommandHelpers::handleMarkKillOnClientDisconnect(opCtx);
             // Although it is a command, a find command gets counted as a query.
             globalOpCounters.gotQuery();
@@ -591,6 +593,10 @@ public:
 
             // Generate the response object to send to the client.
             firstBatch.done(cursorId, nss.ns());
+            auto end = std::chrono::high_resolution_clock::now();
+            LOGV2(9999993, "FindCmd FINISHES : time={time}",
+                  "FindCmd FINISHES!",
+                  "time"_attr = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count());
         }
 
         void appendMirrorableRequest(BSONObjBuilder* bob) const override {
