@@ -401,7 +401,6 @@ public:
          */
         void run(OperationContext* opCtx, rpc::ReplyBuilderInterface* result) {
             auto begin = std::chrono::high_resolution_clock::now();
-            LOGV2(9999992, "FindCmd run STARTS!");
             CommandHelpers::handleMarkKillOnClientDisconnect(opCtx);
             // Although it is a command, a find command gets counted as a query.
             globalOpCounters.gotQuery();

@@ -532,7 +532,6 @@ public:
     Future<void> run() {
         return makeReadyFutureWith([&] {
                    auto begin = std::chrono::high_resolution_clock::now();
-                   LOGV2(9999990, "INITIATE COMMAND STARTS!");
                    _initiateCommand();
                    Future<void> result = _commandExec();
                    auto end = std::chrono::high_resolution_clock::now();
